@@ -1,7 +1,6 @@
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
-
 def do_dict_new_words():
     def import_book():
         s = ''
@@ -46,3 +45,5 @@ def do_dict_new_words():
 
 
 do_dict_new_words()
+token = [str(line) for line in open('D:\Token.txt', 'r')]
+print(token)
