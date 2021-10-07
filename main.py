@@ -1,11 +1,14 @@
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
+
 def do_dict_new_words():
     def import_book():
         s = ''
-        for line in open('Book.txt', 'r'):
+        f = open('Book.txt', 'r')
+        for line in f:
             s += line + ' '
+        f.close()
         return s
 
     def split_book_to_words():
@@ -22,11 +25,13 @@ def do_dict_new_words():
     def del_from_words_my_dict():
         knew_set = set()
         new_s = ''
-        for line in open('dict.txt', 'r'):
+        f = open('dict.txt', 'r')
+        for line in f:
             for char in line:
                 if char.isalpha() or char == ',':
                     new_s += char
             knew_set |= set(new_s.split(','))
+        f.close()
         all_dict = norm_words_amount()
         differ_dict = {}
         for key in all_dict.keys():
@@ -45,5 +50,6 @@ def do_dict_new_words():
 
 
 do_dict_new_words()
-token = [str(line) for line in open('D:\Token.txt', 'r')]
-print(token)
+f = open('D:\Token.txt', 'r')
+token = f.read()
+f.close()
