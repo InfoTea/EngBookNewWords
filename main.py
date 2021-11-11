@@ -1,55 +1,70 @@
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
+import telebot
 
 
-def do_dict_new_words():
+def take_unknown_words():
     def import_book():
-        s = ''
-        f = open('Book.txt', 'r')
-        for line in f:
-            s += line + ' '
-        f.close()
-        return s
+        file = open('Book.txt')
+        file_text = file.read()
+        file.close()
+        return file_text
 
-    def split_book_to_words():
+    def split_words():
         return [elem.lower() for elem in word_tokenize(import_book()) if elem.isalpha()]
 
-    def norm_words_amount():
+    def normalize_dict():
         wordnet_lemmatizer = WordNetLemmatizer()
-        word_dict = {}
-        for word in split_book_to_words():
+        words_dict = {}
+        for word in split_words():
             rootWord = wordnet_lemmatizer.lemmatize(word)
-            word_dict[rootWord] = word_dict.get(rootWord, 0) + 1
-        return word_dict
+            words_dict[rootWord] = words_dict.get(rootWord, 0) + 1
+        return words_dict
 
-    def del_from_words_my_dict():
-        knew_set = set()
-        new_s = ''
-        f = open('dict.txt', 'r')
-        for line in f:
-            for char in line:
-                if char.isalpha() or char == ',':
-                    new_s += char
-            knew_set |= set(new_s.split(','))
-        f.close()
-        all_dict = norm_words_amount()
-        differ_dict = {}
-        for key in all_dict.keys():
-            if key not in knew_set:
-                differ_dict[key] = all_dict[key]
-        return differ_dict
+    def take_unknown_dict():
+        file = open('dict.txt')
+        file_set = set(file.read().split(',\n'))
+        file.close()
+        book_words_dict = normalize_dict()
+        return {key: value for key, value in book_words_dict.items() if key not in file_set}
 
-    def sorted_dict_int_txt():
-        word_dict_sort = list(sorted(del_from_words_my_dict().items(), key=lambda x: x[1], reverse=True))
+    def sort_unknown_dict():
+        word_dict_sort = sorted(take_unknown_dict().items(), key=lambda x: x[1], reverse=True)
         f = open('ToLearn.txt', 'w')
-        for word in word_dict_sort:
-            f.write(str(word) + '\n')
+        for key, value in word_dict_sort:
+            f.write(f'{key}: {value}' + '\n')
         f.close()
 
-    sorted_dict_int_txt()
+    sort_unknown_dict()
 
 
-do_dict_new_words()
-f = open('D:\Token.txt', 'r')
-token = f.read()
-f.close()
+take_unknown_words()
+# f = open('D:\Token.txt', 'r')
+# token = str(f.read())
+# f.close()
+# bot = telebot.TeleBot(token)
+#
+#
+# @bot.message_handler(commands=['start'])
+# def start(message):
+#     bot.send_message(message.chat.id,
+#                      'Здравствуй, дорогой друг! Я помогаю тебе читать книги на английском языке. '
+#                      'Если ты загрузишь в меня книгу и свой словарный запас, '
+#                      'то я пришлю тебе все незнакомые слова в порядке частоты их попдания в тексте. '
+#                      'Подробнее принцип моей работы можно узнать по команде /help')
+#
+#
+# @bot.message_handler(commands=['start', 'help'])
+# def start(message):
+#     bot.send_message(message.chat.id, 'Hi, man!')
+#
+#
+# @bot.message_handler(func=lambda m: True)
+# def echo_all(message):
+#     if message.text == 'Диана':
+#         bot.reply_to(message, 'Богиня')
+#     else:
+#         bot.reply_to(message, 'Пошёл на хуй!')
+#
+#
+# bot.polling()
