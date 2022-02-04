@@ -22,8 +22,9 @@ def text_extract(path):
             with open(path, 'r', encoding=file_encoding) as file:
                 soup = BeautifulSoup(file.read(), 'lxml')
             with open('users_data\\book.txt', 'w', encoding='utf-8') as file:
-                for paragraph in soup.find_all('body'):
-                    file.write(paragraph.get_text(' ') + ' ')
+                for paragraph in soup.find('body'):
+                    line = ' '.join((word for word in paragraph.get_text(' ').split() if len(word) < 20))
+                    file.write(line + ' ')
         else:
             print('Неизвестная кодировка файла. Перекодируйте его в utf-8')
         print('Книга успешно загружена.')

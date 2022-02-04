@@ -2,6 +2,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 import testing
 import json
+from langdetect import detect
 
 
 def import_book():
@@ -11,7 +12,7 @@ def import_book():
 
 
 def split_words():
-    return [elem.lower() for elem in word_tokenize(import_book()) if elem.isalpha()]
+    return (elem.lower() for elem in word_tokenize(import_book()) if elem.isalpha() and detect(elem) == 'en')
 
 
 def normalize_dict():

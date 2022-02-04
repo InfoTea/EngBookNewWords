@@ -1,4 +1,3 @@
-from chardet.universaldetector import UniversalDetector
 from bs4 import BeautifulSoup
 import zipfile
 
@@ -8,7 +7,8 @@ def text_extract(xml):
         soup = BeautifulSoup(xml, 'lxml')
         text = ''
         for paragraph in soup.find_all('body'):
-            text += paragraph.get_text(strip=True)
+            line = ' '.join((word for word in paragraph.get_text(' ').split() if len(word) < 20))
+            text += line + ' '
         return text
     except:
         print('Неизвестная кодировка файла. Перекодируйте его в utf-8')
